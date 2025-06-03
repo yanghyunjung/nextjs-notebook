@@ -1,120 +1,61 @@
-import { NextResponse } from 'next/server';
-import { GuestbookFormData } from '../../../types/guestbook';
-import connectDB from '../../../lib/mongodb';
-import GuestbookMessage from '../../../models/GuestbookMessage';
+import { NextRequest } from 'next/server';
+import { GuestbookEntry } from '@/types/guestbook';
+import { HTTP_STATUS } from '@/constants/api';
+import { createSuccessResponse, createErrorResponse, handleApiError } from '@/utils/api';
+import connectDB from '@/lib/mongodb';
+import Guestbook from '@/models/Guestbook';
 
-export async function GET() {
+export async function GET(): Promise<Response> {
   try {
-    console.log('Attempting to connect to MongoDB...');
     await connectDB();
-    console.log('Successfully connected to MongoDB');
-
-    console.log('Fetching messages...');
-    const messages = await GuestbookMessage.find().sort({ createdAt: -1 });
-    console.log(`Found ${messages.length} messages`);
+    const entries = await Guestbook.find().sort({ createdAt: -1 });
     
-    if (!messages) {
-      console.log('No messages found in database');
-      return NextResponse.json(
-        { error: 'No messages found' },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json(messages);
+    return createSuccessResponse<GuestbookEntry[]>(entries);
   } catch (error) {
-    console.error('GET /api/guestbook error:', error);
-    
-    // Check if it's a MongoDB connection error
-    if (error instanceof Error) {
-      if (error.message.includes('MongoDB')) {
-        console.error('MongoDB connection error:', error);
-        return NextResponse.json(
-          { error: 'Database connection error' },
-          { status: 503 }
-        );
-      }
-      
-      if (error.message.includes('MONGODB_URI')) {
-        console.error('MongoDB URI configuration error:', error);
-        return NextResponse.json(
-          { error: 'Database configuration error' },
-          { status: 500 }
-        );
-      }
-    }
-
-    return NextResponse.json(
-      { error: 'Failed to fetch messages' },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest): Promise<Response> {
   try {
-    const data: GuestbookFormData = await request.json();
-    
-    if (!data.name || !data.message) {
-      return NextResponse.json(
-        { error: 'Name and message are required' },
-        { status: 400 }
-      );
+    const body = await request.json();
+    const { content, author, isAdmin = false } = body;
+
+    if (!content || !author) {
+      return createErrorResponse('Content and author are required');
     }
 
     await connectDB();
-    const newMessage = await GuestbookMessage.create({
-      name: data.name.trim(),
-      message: data.message.trim(),
-      isAdmin: false,
+    const newEntry = await Guestbook.create({
+      content,
+      author,
+      isAdmin,
     });
 
-    return NextResponse.json(newMessage);
+    return createSuccessResponse<GuestbookEntry>(newEntry, HTTP_STATUS.CREATED);
   } catch (error) {
-    console.error('POST /api/guestbook error:', error);
-    return NextResponse.json(
-      { error: 'Failed to create message' },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE(request: NextRequest): Promise<Response> {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
-    const adminKey = searchParams.get('adminKey');
 
     if (!id) {
-      return NextResponse.json(
-        { error: 'Message ID is required' },
-        { status: 400 }
-      );
-    }
-
-    if (!adminKey || adminKey !== process.env.ADMIN_KEY) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return createErrorResponse('Entry ID is required');
     }
 
     await connectDB();
-    const deletedMessage = await GuestbookMessage.findByIdAndDelete(id);
+    const deletedEntry = await Guestbook.findByIdAndDelete(id);
 
-    if (!deletedMessage) {
-      return NextResponse.json(
-        { error: 'Message not found' },
-        { status: 404 }
-      );
+    if (!deletedEntry) {
+      return createErrorResponse('Entry not found', HTTP_STATUS.NOT_FOUND);
     }
 
-    return NextResponse.json({ success: true, message: 'Message deleted successfully' });
+    return createSuccessResponse({ message: 'Entry deleted successfully' });
   } catch (error) {
-    console.error('DELETE /api/guestbook error:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete message' },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 } 

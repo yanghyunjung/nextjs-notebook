@@ -1,31 +1,21 @@
-import { NextResponse } from 'next/server';
-import mongoose from 'mongoose';
+import { GuestbookStatus } from '@/types/guestbook';
+import { createSuccessResponse, handleApiError } from '@/utils/api';
+import connectDB from '@/lib/mongodb';
+import Guestbook from '@/models/Guestbook';
 
-export async function GET() {
+export async function GET(): Promise<Response> {
   try {
-    // Log environment variable (masked for security)
-    const uri = process.env.MONGODB_URI;
-    console.log('MONGODB_URI exists:', !!uri);
-    console.log('MONGODB_URI length:', uri?.length);
-    
-    const isConnected = mongoose.connection.readyState === 1;
-    
-    return NextResponse.json({
-      status: 'success',
-      connected: isConnected,
-      connectionState: mongoose.connection.readyState,
-      connectionStateText: ['disconnected', 'connected', 'connecting', 'disconnecting'][mongoose.connection.readyState],
-      database: mongoose.connection.name,
-      host: mongoose.connection.host,
-      envLoaded: !!process.env.MONGODB_URI,
-    });
+    await connectDB();
+    const total = await Guestbook.countDocuments();
+    const lastEntry = await Guestbook.findOne().sort({ createdAt: -1 });
+
+    const status: GuestbookStatus = {
+      total,
+      lastUpdated: lastEntry?.createdAt?.toISOString() || new Date().toISOString(),
+    };
+
+    return createSuccessResponse<GuestbookStatus>(status);
   } catch (error) {
-    console.error('MongoDB connection check error:', error);
-    return NextResponse.json({
-      status: 'error',
-      error: error instanceof Error ? error.message : 'Unknown error',
-      connected: false,
-      envLoaded: !!process.env.MONGODB_URI,
-    }, { status: 500 });
+    return handleApiError(error);
   }
 } 

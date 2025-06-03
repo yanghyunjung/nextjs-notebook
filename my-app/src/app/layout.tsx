@@ -4,9 +4,10 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
+//: 페이지 제목, 설명 등 메타데이터 설정
 export const metadata: Metadata = {
   title: "Hyunjung Yang - Frontend Engineer",
-  description: "Frontend Engineer Portfolio",
+  description: "Frontend Engineer Website",
 };
 
 export default function RootLayout({

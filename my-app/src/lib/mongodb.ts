@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio';
+const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
+  throw new Error('Please define the MONGODB_URI environment variable inside .env');
 }
 
 interface MongooseCache {
@@ -12,14 +12,13 @@ interface MongooseCache {
 }
 
 declare global {
-  let mongoose: MongooseCache | undefined;
+  var mongoose: MongooseCache | undefined;
 }
 
-type MongooseGlobal = { mongoose?: MongooseCache };
-const cached: MongooseCache = (globalThis as MongooseGlobal).mongoose || { conn: null, promise: null };
+let cached: MongooseCache = global.mongoose || { conn: null, promise: null };
 
-if (!(globalThis as MongooseGlobal).mongoose) {
-  (globalThis as MongooseGlobal).mongoose = cached;
+if (!global.mongoose) {
+  global.mongoose = cached;
 }
 
 async function connectDB() {
@@ -32,23 +31,15 @@ async function connectDB() {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI, opts)
-      .then((mongoose) => {
-        console.log('MongoDB connected successfully');
-        return mongoose;
-      })
-      .catch((error) => {
-        console.error('MongoDB connection error:', error);
-        cached.promise = null;
-        throw error;
-      });
+    cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
+      return mongoose;
+    });
   }
 
   try {
     cached.conn = await cached.promise;
   } catch (e) {
     cached.promise = null;
-    console.error('Failed to establish MongoDB connection:', e);
     throw e;
   }
 

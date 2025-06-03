@@ -29,7 +29,7 @@ export default function Home() {
     setIsDarkMode(newDarkMode);
     localStorage.setItem('darkMode', String(newDarkMode));
 
-    // Add transition class to body
+    // 다크모드 토글 시 트랜지션 효과 추가
     document.body.classList.add('theme-transition');
 
     if (newDarkMode) {
@@ -38,7 +38,7 @@ export default function Home() {
       document.documentElement.classList.remove('dark');
     }
 
-    // Remove transition class after animation completes
+    // 다크모드 토글 시 일정 시간 후 트랜지션 효과 제거
     setTimeout(() => {
       document.body.classList.remove('theme-transition');
     }, 1000);
@@ -78,6 +78,7 @@ export default function Home() {
       }`}>
       <CursorParticles />
       <ScrollProgress />
+
       {/* Left Menu */}
       <nav className={`fixed left-0 top-0 h-full w-64 backdrop-blur-sm shadow-lg border-r transition-colors duration-300 ${isDarkMode
         ? 'bg-gray-800/80 border-gray-700'
@@ -306,10 +307,7 @@ export default function Home() {
               </p>
               <div className="space-y-2">
                 <p className={`text-lg md:text-xl transition-colors ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} cute-text`}>
-                  컴퓨터 공학을 전공한 프론트엔드 개발자로, 사용자 중심의 웹 서비스를 만드는 것을 좋아합니다.
-                </p>
-                <p className={`text-base md:text-lg transition-colors ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} cute-text`}>
-                  React와 TypeScript를 기반으로 깔끔하고 효율적인 코드 작성을 지향하며, 새로운 기술 트렌드를 학습하고 적용하는 것을 즐깁니다.
+                  새로운 기술 트렌드를 학습하고 적용하는 것을 즐깁니다.
                 </p>
               </div>
 
@@ -568,7 +566,7 @@ export default function Home() {
             <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-pink-500 to-rose-500 text-transparent bg-clip-text animate-gradient">
               Portfolio (포트폴리오)
             </h2>
-            <div className={`backdrop-blur-sm p-8 rounded-2xl shadow-lg border transition-all duration-300 hover:shadow-2xl hover:scale-105 transform hover:-translate-y-2 ${isDarkMode
+            <div className={`backdrop-blur-sm p-8 rounded-2xl shadow-lg border duration-300 ${isDarkMode
               ? 'bg-gray-800/80 border-gray-700 hover:bg-gray-700/80'
               : 'bg-white/80 border-pink-100 hover:bg-white/90'
               }`}>
@@ -580,9 +578,14 @@ export default function Home() {
                   href="https://devjjung.notion.site/Frontend-Engineer_-a392d62685ef495d839f566901c28533"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block px-8 py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-xl font-semibold shadow-lg transition-all hover:shadow-xl hover:scale-105 hover:from-pink-600 hover:to-rose-600 transform hover:-translate-y-1"
+                  className="inline-block px-8 py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-xl font-semibold shadow-lg"
                 >
-                  Notion 보기
+                  <span className="flex items-center space-x-2">
+                    <span>Notion</span>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                  </span>
                 </a>
               </div>
             </div>
