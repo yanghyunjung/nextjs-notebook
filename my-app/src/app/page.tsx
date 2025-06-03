@@ -1,8 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import GuestbookForm from '../components/GuestbookForm';
-import GuestbookList from '../components/GuestbookList';
 import { GuestbookMessage, GuestbookFormData } from '../types/guestbook';
 import LoginForm from '../components/LoginForm';
 import Image from 'next/image';
@@ -73,7 +71,7 @@ export default function Home() {
     }
   };
 
-  const handleLogin = (adminKey: string) => {
+  const handleLogin = () => {
     setIsAdmin(true);
     setShowLoginForm(false);
   };
