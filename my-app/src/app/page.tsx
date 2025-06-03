@@ -279,11 +279,25 @@ export default function Home() {
       </nav>
 
       {/* Main Content */}
-      <main className="ml-64">
+      <main className="ml-64 relative">
+        <div className="fixed inset-0 -z-10">
+          <div className={`absolute inset-0 transition-opacity duration-1000 ${isDarkMode ? 'opacity-100' : 'opacity-0'
+            }`}>
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),transparent_50%)] animate-pulse"></div>
+            </div>
+          </div>
+          <div className={`absolute inset-0 transition-opacity duration-1000 ${isDarkMode ? 'opacity-0' : 'opacity-100'
+            }`}>
+            <div className="absolute inset-0 bg-gradient-to-br from-pink-50 via-white to-rose-50">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,192,203,0.2),transparent_50%)] animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+
         {/* Hero Section */}
         <section id="home" className="flex flex-col items-center justify-center min-h-screen px-4 relative">
-          {/* Profile Image */}
-          <div className="fixed top-8 right-8 w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-pink-200 dark:border-gray-700 shadow-lg">
+          <div className="fixed top-8 right-8 w-32 h-32 z-10 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-pink-200 dark:border-gray-700 shadow-lg transform hover:scale-105 transition-transform duration-300 animate-float">
             <Image
               src="/me.png"
               alt="Hyunjung Yang"
@@ -293,12 +307,11 @@ export default function Home() {
               priority
             />
           </div>
-          <div className="text-center max-w-3xl">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-pink-500 to-rose-500 text-transparent bg-clip-text">
+          <div className="text-center max-w-3xl transform hover:scale-105 transition-transform duration-300">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-pink-500 to-rose-500 text-transparent bg-clip-text animate-gradient">
               Hyunjung Yang
             </h1>
-            <p className={`text-xl md:text-2xl mb-12 transition-colors ${isDarkMode ? 'text-gray-300' : 'text-gray-600'
-              }`}>
+            <p className={`text-xl md:text-2xl mb-12 transition-colors ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
               Frontend Engineer
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
@@ -306,7 +319,7 @@ export default function Home() {
                 href="https://dev-jjeong9.tistory.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-8 py-4 rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold shadow-lg transition-all hover:shadow-xl hover:scale-105"
+                className="px-8 py-4 rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold shadow-lg transition-all hover:shadow-xl hover:scale-105 hover:from-pink-600 hover:to-rose-600 transform hover:-translate-y-1"
               >
                 Blog
               </a>
@@ -314,7 +327,7 @@ export default function Home() {
                 href="https://github.com/yanghyunjung"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-8 py-4 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 text-white font-semibold shadow-lg transition-all hover:shadow-xl hover:scale-105"
+                className="px-8 py-4 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 text-white font-semibold shadow-lg transition-all hover:shadow-xl hover:scale-105 hover:from-pink-700 hover:to-rose-700 transform hover:-translate-y-1"
               >
                 GitHub
               </a>
@@ -345,19 +358,19 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Skills Section */}
+        {/* Skills Section with enhanced cards */}
         <section id="skills" className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-pink-500 to-rose-500 text-transparent bg-clip-text">
+            <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-pink-500 to-rose-500 text-transparent bg-clip-text animate-gradient">
               Skills (스킬셋)
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
               {['React', 'TypeScript', 'React Query', 'Redux', 'Styled-Components', 'Tailwind CSS', 'GitHub', 'Confluence', 'Slack'].map((skill) => (
                 <div
                   key={skill}
-                  className={`backdrop-blur-sm p-8 rounded-2xl shadow-lg text-center hover:shadow-xl transition-all hover:scale-105 border ${isDarkMode
-                    ? 'bg-gray-800/80 border-gray-700 text-gray-300'
-                    : 'bg-white/80 border-pink-100 text-gray-800'
+                  className={`backdrop-blur-sm p-8 rounded-2xl shadow-lg text-center transition-all duration-300 hover:shadow-2xl hover:scale-105 border transform hover:-translate-y-2 ${isDarkMode
+                    ? 'bg-gray-800/80 border-gray-700 text-gray-300 hover:bg-gray-700/80'
+                    : 'bg-white/80 border-pink-100 text-gray-800 hover:bg-white/90'
                     }`}
                 >
                   <h3 className="font-bold text-xl">{skill}</h3>
@@ -367,26 +380,25 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Notion Portfolio Section */}
+        {/* Notion Portfolio Section with enhanced card */}
         <section id="notion" className="py-20 px-4">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-pink-500 to-rose-500 text-transparent bg-clip-text">
+            <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-pink-500 to-rose-500 text-transparent bg-clip-text animate-gradient">
               Portfolio (포트폴리오)
             </h2>
-            <div className={`backdrop-blur-sm p-8 rounded-2xl shadow-lg border ${isDarkMode
-              ? 'bg-gray-800/80 border-gray-700'
-              : 'bg-white/80 border-pink-100'
+            <div className={`backdrop-blur-sm p-8 rounded-2xl shadow-lg border transition-all duration-300 hover:shadow-2xl hover:scale-105 transform hover:-translate-y-2 ${isDarkMode
+              ? 'bg-gray-800/80 border-gray-700 hover:bg-gray-700/80'
+              : 'bg-white/80 border-pink-100 hover:bg-white/90'
               }`}>
               <div className="text-center">
-                <p className={`mb-8 transition-colors ${isDarkMode ? 'text-gray-300' : 'text-gray-600'
-                  }`}>
+                <p className={`mb-8 transition-colors ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                   더 많은 프로젝트들은 노션에서 확인하실 수 있습니다.
                 </p>
                 <a
                   href="https://devjjung.notion.site/Frontend-Engineer_-a392d62685ef495d839f566901c28533"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block px-8 py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-xl font-semibold shadow-lg transition-all hover:shadow-xl hover:scale-105"
+                  className="inline-block px-8 py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-xl font-semibold shadow-lg transition-all hover:shadow-xl hover:scale-105 hover:from-pink-600 hover:to-rose-600 transform hover:-translate-y-1"
                 >
                   Notion 보기
                 </a>
@@ -408,24 +420,17 @@ export default function Home() {
               ? 'bg-gray-800/80 border-gray-700'
               : 'bg-white/80 border-pink-100'
               }`}>
-              <div className="space-y-8">
-                <DynamicGuestbookForm onSubmit={handleSubmitMessage} isDarkMode={isDarkMode} />
-                <div className="border-t border-pink-100 dark:border-gray-700 pt-8">
-                  {isLoading ? (
-                    <div className="text-center py-8">
-                      <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-pink-500 border-t-transparent" />
-                      <p className={`mt-2 transition-colors ${isDarkMode ? 'text-gray-300' : 'text-gray-500'
-                        }`}>
-                        메시지를 불러오는 중...
-                      </p>
-                    </div>
-                  ) : (
-                    <DynamicGuestbookList
-                      messages={messages}
-                      isAdmin={isAdmin}
-                      onDelete={handleDeleteMessage}
-                    />
-                  )}
+              <div className="text-center">
+                <div className="flex flex-col items-center justify-center space-y-4">
+                  <svg className="w-16 h-16 text-pink-500 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                  <h3 className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-rose-500 text-transparent bg-clip-text">
+                    Coming Soon
+                  </h3>
+                  <p className={`text-lg ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                    방명록 기능을 준비중입니다.
+                  </p>
                 </div>
               </div>
             </div>

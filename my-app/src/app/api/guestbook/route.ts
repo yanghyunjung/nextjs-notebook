@@ -5,11 +5,45 @@ import GuestbookMessage from '../../../models/GuestbookMessage';
 
 export async function GET() {
   try {
+    console.log('Attempting to connect to MongoDB...');
     await connectDB();
+    console.log('Successfully connected to MongoDB');
+
+    console.log('Fetching messages...');
     const messages = await GuestbookMessage.find().sort({ createdAt: -1 });
+    console.log(`Found ${messages.length} messages`);
+    
+    if (!messages) {
+      console.log('No messages found in database');
+      return NextResponse.json(
+        { error: 'No messages found' },
+        { status: 404 }
+      );
+    }
+
     return NextResponse.json(messages);
   } catch (error) {
     console.error('GET /api/guestbook error:', error);
+    
+    // Check if it's a MongoDB connection error
+    if (error instanceof Error) {
+      if (error.message.includes('MongoDB')) {
+        console.error('MongoDB connection error:', error);
+        return NextResponse.json(
+          { error: 'Database connection error' },
+          { status: 503 }
+        );
+      }
+      
+      if (error.message.includes('MONGODB_URI')) {
+        console.error('MongoDB URI configuration error:', error);
+        return NextResponse.json(
+          { error: 'Database configuration error' },
+          { status: 500 }
+        );
+      }
+    }
+
     return NextResponse.json(
       { error: 'Failed to fetch messages' },
       { status: 500 }
